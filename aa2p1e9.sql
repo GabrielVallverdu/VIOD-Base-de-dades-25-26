@@ -1,0 +1,67 @@
+CREATE TABLE ZOO (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nom VARCHAR(100) NOT NULL,
+    ciutat VARCHAR(100),
+    pais VARCHAR(100),
+    pressupost DECIMAL(12,2),
+    grandaria INT CHECK (grandaria BETWEEN 1000 AND 1000000)
+);
+
+CREATE TABLE ESPECIE (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nom_vulgar VARCHAR(100),
+    nom_cientific VARCHAR(150),
+    familia VARCHAR(100),
+    en_perill_extincio BOOLEAN
+);
+
+CREATE TABLE ANIMAL (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    num_identificacio VARCHAR(50) UNIQUE NOT NULL,
+    sexe ENUM('M','F'),
+    any_naixement YEAR,
+    pais_origen VARCHAR(100),
+    continent VARCHAR(100),
+    id_especie INT,
+    FOREIGN KEY (id_especie) REFERENCES ESPECIE(id)
+);
+
+CREATE TABLE POSSEEIX (
+    id_zoo INT,
+    id_animal INT,
+    PRIMARY KEY (id_zoo, id_animal),
+    FOREIGN KEY (id_zoo) REFERENCES ZOO(id),
+    FOREIGN KEY (id_animal) REFERENCES ANIMAL(id)
+);
+
+
+
+ALTER TABLE ANIMAL
+DROP FOREIGN KEY animal_ibfk_1;
+
+ALTER TABLE POSSEEIX
+DROP FOREIGN KEY posseeix_ibfk_1,
+DROP FOREIGN KEY posseeix_ibfk_2;
+
+ALTER TABLE ANIMAL
+ADD CONSTRAINT fk_animal_especie
+FOREIGN KEY (id_especie)
+REFERENCES ESPECIE(id)
+ON DELETE CASCADE;
+
+ALTER TABLE POSSEEIX
+ADD CONSTRAINT fk_posseeix_zoo
+FOREIGN KEY (id_zoo)
+REFERENCES ZOO(id)
+ON DELETE CASCADE;
+
+ALTER TABLE POSSEEIX
+ADD CONSTRAINT fk_posseeix_animal
+FOREIGN KEY (id_animal)
+REFERENCES ANIMAL(id)
+ON DELETE CASCADE;
+
+DESCRIBE ZOO;
+DESCRIBE ESPECIE;
+DESCRIBE ANIMAL;
+DESCRIBE POSSEEIX;
